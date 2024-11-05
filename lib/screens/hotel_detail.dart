@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:ticket_app/base/res/styles/app_styles.dart';
 import 'package:ticket_app/base/utils/all_json.dart';
+import 'package:ticket_app/controller/text_expansion_controller.dart';
 
 class HotelDetail extends StatefulWidget {
   const HotelDetail({super.key});
@@ -85,8 +87,7 @@ class _HotelDetailState extends State<HotelDetail> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ExpandedTextWidget(
-                text:
-                    hotelList[index]["detail"],
+                text: hotelList[index]["detail"],
               ),
               // Text(
               //     "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum"),
@@ -105,8 +106,9 @@ class _HotelDetailState extends State<HotelDetail> {
                   itemCount: hotelList[index]["images"]?.length ?? 0,
                   itemBuilder: (context, indexImage) {
                     return Container(
-                      margin: EdgeInsets.all(16),
-                        child:  Image.asset("assets/images/${hotelList[index]["images"][indexImage]}"));
+                        margin: EdgeInsets.all(16),
+                        child: Image.asset(
+                            "assets/images/${hotelList[index]["images"][indexImage]}"));
                   }),
             ),
           ]))
@@ -116,47 +118,40 @@ class _HotelDetailState extends State<HotelDetail> {
   }
 }
 
-class ExpandedTextWidget extends StatefulWidget {
+class ExpandedTextWidget extends StatelessWidget {
   final String text;
 
-  const ExpandedTextWidget({super.key, required this.text});
+  ExpandedTextWidget({super.key, required this.text});
 
-  @override
-  State<ExpandedTextWidget> createState() => _ExpandedTextWidgetState();
-}
-
-class _ExpandedTextWidgetState extends State<ExpandedTextWidget> {
-  bool isExpanded = false;
-  String expandText = "more";
-  _toggleExpansion() {
-    setState(() {
-      isExpanded = !isExpanded;
-    });
-    expandText = isExpanded ? "less" : "more";
-  }
+  final TextExpansionController controller = Get.put(TextExpansionController());
 
   @override
   Widget build(BuildContext context) {
-    var textWidget = Text(
-      textAlign: TextAlign.justify,
-      widget.text,
-      maxLines: isExpanded ? null : 6,
-      overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        textWidget,
-        GestureDetector(
-          onTap: () {
-            _toggleExpansion();
-          },
-          child: Text(
-            expandText,
-            style: AppStyles.textStyle.copyWith(color: AppStyles.primaryColor),
-          ),
-        )
-      ],
-    );
+    return Obx(() {
+      var textWidget = Text(
+        textAlign: TextAlign.justify,
+        text,
+        maxLines: controller.isExpanded.value ? null : 6,
+        overflow: controller.isExpanded.value
+            ? TextOverflow.visible
+            : TextOverflow.ellipsis,
+      );
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          textWidget,
+          GestureDetector(
+            onTap: () {
+              controller.toggleExpansion();
+            },
+            child: Text(
+              controller.expandText.value,
+              style:
+                  AppStyles.textStyle.copyWith(color: AppStyles.primaryColor),
+            ),
+          )
+        ],
+      );
+    });
   }
 }

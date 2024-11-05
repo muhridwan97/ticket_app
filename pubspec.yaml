@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   fluentui_icons: ^1.0.0
   barcode_widget: ^2.0.4
+  get: ^4.6.6
+  flutter_native_splash: ^2.4.2
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +50,16 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: "^0.14.1"
 
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/ic_launcher_foreground.png"
+  remove_alpha_ios: true
+  min_sdk_android: 24 # android min sdk min:16, default 21
+  adaptive_icon_background: "#ffffff" # You can use a color or image for the background
+  adaptive_icon_foreground: "assets/icons/ic_launcher_foreground.png" # For adaptive icons on Android
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
